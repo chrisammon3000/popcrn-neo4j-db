@@ -8,5 +8,5 @@ CREATE (project:Project {
     projectName: line.name,
 	projectCreatedBy: '<userHandle>',
     projectDescription: line.description,
-    projectCreatedDate: line.date, 
+    projectCreatedDate: line.date
     })
