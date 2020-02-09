@@ -1,0 +1,20 @@
+// 03 Create Image, Tag nodes
+LOAD CSV WITH HEADERS
+FROM 'file:///media.csv' AS line
+CREATE (image:Image { 
+    imageId: '<imageId>',
+    imageOwner: line.owner,
+	imageCreatedDate: '<createdDate>',
+    imageCaption: '<caption>',
+    imageDescription: '<description>',
+    imageURL: '<URL>'
+    } )
+WITH line, split(line.tags, ',') AS tagnames
+UNWIND tagnames AS tagname
+WITH DISTINCT tagname AS tag_node
+CREATE (tag:Tag { 
+    tagId: '<tagId>',
+    tagName: tag_node,
+	tagCreatedDate: '<createdDate>',
+    tagCreatedBy: '<userHandle>'
+    } )

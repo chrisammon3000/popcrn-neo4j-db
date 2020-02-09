@@ -1,4 +1,4 @@
-// Create User nodes
+// 01 Create User nodes
 LOAD CSV WITH HEADERS
 FROM 'file:///profile.csv' AS line
 CREATE (user:User { 
@@ -13,9 +13,9 @@ CREATE (user:User {
     userBio: line.experience,
     userProfile_FG: line.profile_fg,
     userProfile_BG: line.profile_bg 
-    } )
+    })
 
-// Create Project nodes
+// 02 Create Project nodes
 LOAD CSV WITH HEADERS
 FROM 'file:///project.csv' AS line
 CREATE (project:Project { 
