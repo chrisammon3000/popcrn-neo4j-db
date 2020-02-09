@@ -26,20 +26,23 @@ CREATE (project:Project {
     projectCreatedDate: line.date
     } )
 
-// Create Image, Tag nodes
+// 03 Create Image, Tag nodes
 LOAD CSV WITH HEADERS
 FROM 'file:///media.csv' AS line
 CREATE (image:Image { 
-    imageId: '<int>',
+    imageId: '<imageId>',
     imageOwner: line.owner,
-	imageCreatedDate: '<date>',
-    imageCaption: '<str>',
-    imageDescription: '<str>',
+	imageCreatedDate: '<createdDate>',
+    imageCaption: '<caption>',
+    imageDescription: '<description>',
     imageURL: '<URL>'
     } )
+WITH line, split(line.tags, ',') AS tagnames
+UNWIND tagnames AS tagname
+WITH DISTINCT tagname AS tag_node
 CREATE (tag:Tag { 
-    tagId: '<int>',
-    tagName: line.tags,
-	tagCreatedDate: '<date>',
+    tagId: '<tagId>',
+    tagName: tag_node,
+	tagCreatedDate: '<createdDate>',
     tagCreatedBy: '<userHandle>'
     } )
