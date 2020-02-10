@@ -41,8 +41,9 @@ WITH project_line,
 	split(trim(project_line.users), ',') AS collaborators, 
     project_line.projectid AS project_Id
 UNWIND collaborators AS collaborator
-MATCH (user:User { userHandle: collaborator} ),
-	(project:Project { projectId: project_Id })
+MATCH (user:User { userHandle: collaborator} )
+WITH user, project_Id
+MATCH (project:Project { projectId: project_Id })
 MERGE (user)-[rel:WORKED_ON]->(project)
 SET rel.workedOnDate = '<date>', 
 	rel.userRoles = ['<role 1>', '<role 2>'];
@@ -80,9 +81,11 @@ CREATE (tag:Tag {
     } );
 
 // User :CREATED Image
-MATCH (user:User), (image:Image)
+MATCH (user:User) 
+WITH user
+MATCH (image:Image)
 WHERE user.userHandle = image.imageOwner
-MERGE (user)-[rel:CREATED]->(image) SET rel.createdDate = date()
+MERGE (user)-[rel:CREATED]->(image) SET rel.createdDate = date();
 
 // User LIKES Image
 // data not available
