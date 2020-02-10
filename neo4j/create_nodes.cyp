@@ -85,7 +85,7 @@ MATCH (user:User)
 WITH user
 MATCH (image:Image)
 WHERE user.userHandle = image.imageOwner
-MERGE (user)-[rel:CREATED]->(image) SET rel.createdDate = date();
+MERGE (user)-[rel:CREATED_IMAGE]->(image) SET rel.createdDate = date();
 
 // User: FOLLOWS :Tag
 LOAD CSV WITH HEADERS
