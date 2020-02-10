@@ -39,10 +39,10 @@ CREATE (project:Project {
 // User :WORKED_ON Project
 WITH project_line, 
 	split(trim(project_line.users), ',') AS collaborators, 
-    project_line.name AS project_name
+    project_line.projectid AS project_Id
 UNWIND collaborators AS collaborator
 MATCH (user:User { userHandle: collaborator} ),
-	(project:Project { projectName: project_name })
+	(project:Project { projectId: project_Id })
 MERGE (user)-[rel:WORKED_ON]->(project)
 SET rel.workedOnDate = '<date>', 
 	rel.userRoles = ['<role 1>', '<role 2>'];
