@@ -87,6 +87,18 @@ MATCH (image:Image)
 WHERE user.userHandle = image.imageOwner
 MERGE (user)-[rel:CREATED]->(image) SET rel.createdDate = date();
 
+// User: FOLLOWS :Tag
+LOAD CSV WITH HEADERS
+FROM 'file:///profile.csv' AS profile_line
+WITH '@'+profile_line.handle AS user_handle, 
+    split(profile_line.interests_tags, ',') AS interests
+UNWIND interests AS interest
+MATCH (user:User { userHandle: user_handle })
+WITH user, interest
+MATCH (tag:Tag { tagName: interest})
+MERGE (user)-[r:FOLLOWS]->(tag)
+SET r.followedDate = date();
+
 // User LIKES Image
 // data not available
 
