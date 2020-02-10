@@ -7,4 +7,4 @@ CREATE (project:Project {
 	projectCreatedBy: '<userHandle>',
     projectDescription: project_line.description,
     projectCreatedDate: project_line.date
-    } )
+    } );

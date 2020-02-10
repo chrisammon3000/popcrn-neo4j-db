@@ -16,6 +16,7 @@ CREATE (user:User {
     } );
 
 // 02 Create Project nodes
+WITH max(1) AS dummy
 LOAD CSV WITH HEADERS
 FROM 'file:///project.csv' AS project_line
 CREATE (project:Project { 
@@ -27,6 +28,7 @@ CREATE (project:Project {
     } )
 
 // 03 Create Image nodes
+WITH max(1) AS dummy
 LOAD CSV WITH HEADERS
 FROM 'file:///media.csv' AS image_line
 CREATE (image:Image { 
@@ -39,6 +41,7 @@ CREATE (image:Image {
     } );
 
 // 03 Create Tag nodes
+WITH max(1) AS dummy
 LOAD CSV WITH HEADERS
 FROM 'file:///media.csv' AS tag_line
 WITH tag_line, split(tag_line.tags, ',') AS tagnames
