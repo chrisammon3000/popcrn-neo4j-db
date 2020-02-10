@@ -1,10 +1,11 @@
 // User FOLLOWS user
-WITH line, split(line.following_users, ',') AS followers
+WITH profile_line, split(profile_line.following_users, ',') AS followers
 UNWIND followers AS follower
-MERGE (user:User { userHandle: '@'+line.handle })
+MERGE (user:User { userHandle: '@'+profile_line.handle })
 WITH user, follower
 MATCH (f:User { userHandle: follower })
-CREATE (f)-[r:FOLLOWS]->(user)
+MERGE (f)-[r:FOLLOWS]->(user)
+SET r.followedDate = '<date>';
 
 
 // User WORKED_ON on Project
