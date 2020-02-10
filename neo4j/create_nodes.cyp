@@ -1,43 +1,47 @@
 // 01 Create User nodes
 LOAD CSV WITH HEADERS
-FROM 'file:///profile.csv' AS line
+FROM 'file:///profile.csv' AS profile_line
 CREATE (user:User { 
-    userId: line.User,
-    userHandle: '@' + line.handle,
-	userSiteName:line.SiteName,
-    userFirstName: line.FirstName,
-    userLastName: line.LastName,
-    userEmail: line.email,
-    userPassword: line.password,
-    userGender: line.Gender,
-    userBio: line.experience,
-    userProfile_FG: line.profile_fg,
-    userProfile_BG: line.profile_bg 
-    })
+    userId: profile_line.User,
+    userHandle: '@' + profile_line.handle,
+	userSiteName:profile_line.SiteName,
+    userFirstName: profile_line.FirstName,
+    userLastName: profile_line.LastName,
+    userEmail: profile_line.email,
+    userPassword: profile_line.password,
+    userGender: profile_line.Gender,
+    userBio: profile_line.experience,
+    userProfile_FG: profile_line.profile_fg,
+    userProfile_BG: profile_line.profile_bg 
+    } );
 
 // 02 Create Project nodes
 LOAD CSV WITH HEADERS
-FROM 'file:///project.csv' AS line
+FROM 'file:///project.csv' AS project_line
 CREATE (project:Project { 
-    projectId: line.projectId,
-    projectName: line.name,
+    projectId: project_line.projectId,
+    projectName: project_line.name,
 	projectCreatedBy: '<userHandle>',
-    projectDescription: line.description,
-    projectCreatedDate: line.date
+    projectDescription: project_line.description,
+    projectCreatedDate: project_line.date
     } )
 
-// 03 Create Image, Tag nodes
+// 03 Create Image nodes
 LOAD CSV WITH HEADERS
-FROM 'file:///media.csv' AS line
+FROM 'file:///media.csv' AS image_line
 CREATE (image:Image { 
     imageId: '<imageId>',
-    imageOwner: line.owner,
+    imageOwner: image_line.owner,
 	imageCreatedDate: '<createdDate>',
     imageCaption: '<caption>',
     imageDescription: '<description>',
     imageURL: '<URL>'
-    } )
-WITH line, split(line.tags, ',') AS tagnames
+    } );
+
+// 03 Create Tag nodes
+LOAD CSV WITH HEADERS
+FROM 'file:///media.csv' AS tag_line
+WITH tag_line, split(tag_line.tags, ',') AS tagnames
 UNWIND tagnames AS tagname
 WITH DISTINCT tagname AS tag_node
 CREATE (tag:Tag { 
@@ -45,4 +49,4 @@ CREATE (tag:Tag {
     tagName: tag_node,
 	tagCreatedDate: '<createdDate>',
     tagCreatedBy: '<userHandle>'
-    } )
+    } );

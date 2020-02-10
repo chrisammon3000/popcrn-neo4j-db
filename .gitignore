@@ -3,3 +3,6 @@
 
 // Directories
 /data
+
+// Project files
+/neo4j/create_nodes.cyp

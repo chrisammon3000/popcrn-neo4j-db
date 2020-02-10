@@ -1,9 +1,3 @@
-
-
-
-
-
-
 // User FOLLOWS user
 WITH line, split(line.following_users, ',') AS followers
 UNWIND followers AS follower
