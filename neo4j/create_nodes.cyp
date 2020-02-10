@@ -59,10 +59,12 @@ CREATE (image:Image {
     imageCaption: '<caption>',
     imageDescription: '<description>',
     imageURL: image_line.url
-    } )
+    } );
 
 // User :CREATED Image
-
+MATCH (user:User), (image:Image)
+WHERE user.userHandle = image.imageOwner
+MERGE (user)-[rel:CREATED]->(image) SET rel.createdDate = date()
 
 // 03 Create Tag nodes
 WITH max(1) AS dummy
