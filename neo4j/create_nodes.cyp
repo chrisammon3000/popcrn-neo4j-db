@@ -13,7 +13,7 @@ CREATE (user:User {
     userBio: profile_line.experience,
     userProfile_FG: profile_line.profile_fg,
     userProfile_BG: profile_line.profile_bg 
-    } );
+    } )
 
 // User FOLLOWS user
 WITH profile_line, split(profile_line.following_users, ',') AS followers
@@ -22,8 +22,9 @@ MERGE (user:User { userHandle: '@'+profile_line.handle })
 WITH user, follower
 MATCH (f:User { userHandle: follower })
 CREATE (f)-[r:FOLLOWS]->(user)
+SET r.followedDate = '<date>';
 
-// 02 Create Project nodes
+// Create Project nodes
 WITH max(1) AS dummy
 LOAD CSV WITH HEADERS
 FROM 'file:///project.csv' AS project_line
@@ -33,9 +34,21 @@ CREATE (project:Project {
 	projectCreatedBy: '<userHandle>',
     projectDescription: project_line.description,
     projectCreatedDate: project_line.date
-    } );
+    } )
 
-// 03 Create Image nodes
+// User :WORKED_ON Project
+WITH project_line, 
+	split(project_line.users, ',') AS collaborators, 
+    project_line.name AS project_name
+UNWIND collaborators AS collaborator
+MATCH (user:User { userHandle: collaborator} ),
+	(project:Project { projectName: project_name })
+CREATE (user)-[rel:WORKED_ON]->(project)
+SET rel.workedOnDate = '<date>', 
+	rel.userRoles = ['<role 1>', '<role 2>'];
+
+
+// Create Image nodes
 WITH max(1) AS dummy
 LOAD CSV WITH HEADERS
 FROM 'file:///media.csv' AS image_line
@@ -46,7 +59,17 @@ CREATE (image:Image {
     imageCaption: '<caption>',
     imageDescription: '<description>',
     imageURL: '<URL>'
-    } );
+    } )
+
+
+// User CREATED Image
+MATCH (user:User { userHandle: image_line.owner }),
+	(image:Image { imageUrl: image_line.url })
+CREATE (user)-[rel:CREATED]->(image)
+SET rel.createdDate = '<createdDate>';
+
+
+
 
 // 03 Create Tag nodes
 WITH max(1) AS dummy
@@ -64,16 +87,11 @@ CREATE (tag:Tag {
 
 
 
-
-// User WORKED_ON on Project
-
 // User FOLLOWS Project, Tag
+// project followers data is absent from spreadsheets
 
 // User LIKES Project
-
-// User CREATED Project
-
-// User CREATED Image
+// project likes from users data is absent from spreadsheets
 
 // User LIKES Image
 
@@ -85,31 +103,3 @@ CREATE (tag:Tag {
 
 // Constraints
 
-
-
-
-// # Create user nodes
-// user_nodes = "LOAD CSV WITH HEADERS FROM 'file:///profile.csv' AS line CREATE (user:User { 
-// 	userId: toInteger(line.User),
-//     userHandle: '@' + line.handle,
-// 	userSiteName: line.SiteName,
-//     userFirstName: line.FirstName,
-//     userLastName: line.LastName,
-//     userEmail: line.email,
-//     userPassword: line.password,
-//     userGender: line.Gender,
-//     userBio: line.experience,
-//     userProfile_FG: line.profile_fg,
-//     userProfile_BG: line.profile_bg
-//     })"
-
-
-// merge_followers = 'LOAD CSV WITH HEADERS
-//     FROM 'file:///profile.csv' AS line
-//     WITH line, split(line.following_users, ',') AS followers
-//     UNWIND followers AS follower
-//     MERGE (user:User { userHandle: '@'+line.handle })
-//     WITH user, follower
-//     MATCH (f:User { userHandle: follower })
-//     MERGE (f)-[r:FOLLOWS]->(user)
-//     RETURN user, r, f'
