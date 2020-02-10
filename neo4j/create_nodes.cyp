@@ -29,7 +29,7 @@ WITH max(1) AS dummy
 LOAD CSV WITH HEADERS
 FROM 'file:///project.csv' AS project_line
 CREATE (project:Project { 
-    projectId: project_line.projectId,
+    projectId: project_line.projectid,
     projectName: project_line.name,
 	projectCreatedBy: '<userHandle>',
     projectDescription: project_line.description,
