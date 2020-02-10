@@ -21,7 +21,7 @@ UNWIND followers AS follower
 MERGE (user:User { userHandle: '@'+profile_line.handle })
 WITH user, follower
 MATCH (f:User { userHandle: follower })
-MERGE (f)-[r:FOLLOWS]->(user)
+MERGE (f)-[r:FOLLOWS_USER]->(user)
 SET r.followedDate = '<date>';
 
 // Create Project nodes
@@ -96,7 +96,7 @@ UNWIND interests AS interest
 MATCH (user:User { userHandle: user_handle })
 WITH user, interest
 MATCH (tag:Tag { tagName: interest})
-MERGE (user)-[r:FOLLOWS]->(tag)
+MERGE (user)-[r:FOLLOWS_TAG]->(tag)
 SET r.followedDate = date();
 
 // User LIKES Image
