@@ -1,9 +1,9 @@
-// Create User nodes
+// Full Query
 LOAD CSV WITH HEADERS
 FROM 'file:///profile.csv' AS profile_line
 CREATE (user:User { 
     userId: profile_line.User,
-    userHandle: '@' + profile_line.handle,
+    userHandle: '@' + trim(profile_line.handle),
 	userSiteName:profile_line.SiteName,
     userFirstName: profile_line.FirstName,
     userLastName: profile_line.LastName,
@@ -21,7 +21,7 @@ UNWIND followers AS follower
 MERGE (user:User { userHandle: '@'+profile_line.handle })
 WITH user, follower
 MATCH (f:User { userHandle: follower })
-CREATE (f)-[r:FOLLOWS]->(user)
+MERGE (f)-[r:FOLLOWS]->(user)
 SET r.followedDate = '<date>';
 
 // Create Project nodes
@@ -38,12 +38,12 @@ CREATE (project:Project {
 
 // User :WORKED_ON Project
 WITH project_line, 
-	split(project_line.users, ',') AS collaborators, 
+	split(trim(project_line.users), ',') AS collaborators, 
     project_line.name AS project_name
 UNWIND collaborators AS collaborator
 MATCH (user:User { userHandle: collaborator} ),
 	(project:Project { projectName: project_name })
-CREATE (user)-[rel:WORKED_ON]->(project)
+MERGE (user)-[rel:WORKED_ON]->(project)
 SET rel.workedOnDate = '<date>', 
 	rel.userRoles = ['<role 1>', '<role 2>'];
 
@@ -54,21 +54,14 @@ LOAD CSV WITH HEADERS
 FROM 'file:///media.csv' AS image_line
 CREATE (image:Image { 
     imageId: '<imageId>',
-    imageOwner: image_line.owner,
+    imageOwner: '@'+image_line.owner,
 	imageCreatedDate: '<createdDate>',
     imageCaption: '<caption>',
     imageDescription: '<description>',
-    imageURL: '<URL>'
+    imageURL: image_line.url
     } )
 
-
-// User CREATED Image
-MATCH (user:User { userHandle: image_line.owner }),
-	(image:Image { imageUrl: image_line.url })
-CREATE (user)-[rel:CREATED]->(image)
-SET rel.createdDate = '<createdDate>';
-
-
+// User :CREATED Image
 
 
 // 03 Create Tag nodes
