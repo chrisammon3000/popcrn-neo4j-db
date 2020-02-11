@@ -80,8 +80,11 @@ CREATE (tag:Tag {
     tagCreatedBy: '(userHandle)'
     } )
 
-// Image :FROM Project
-WITH image_line.projectid AS project_Id, image_line.url AS image_URL
+// Image :FROM Project - there is no project for the value 'Display' in media.csv
+WITH max(1) AS dummy
+LOAD CSV WITH HEADERS
+FROM 'file:///media.csv' AS image_line
+WITH image_line, image_line.projectid AS project_Id, image_line.url AS image_URL
 MATCH (image:Image { imageURL: image_URL })
 WITH image, project_Id
 MATCH (project:Project { projectId: project_Id })
@@ -89,6 +92,7 @@ MERGE (image)-[rel:FROM]->(project)
 SET rel.imageTaggedDate = date(), rel.taggedByUser = '(userHandle)'
 
 // User :CREATED Image
+WITH max(1) AS dummy
 MATCH (user:User) 
 WITH user
 MATCH (image:Image)
@@ -120,21 +124,14 @@ SET rel.projectTaggedDate = date(),
 	rel.taggedByUser = '(userHandle)';
 
 
+//(Image)-[:IS_TAGGED]->(Tag)
 
 
+
+// User IS_TAGGED_IN Image
 
 // User LIKES Image
 // data not available
-
-// User IS_TAGGED_IN Image
-// data not available
-
-// 03 Create Tag nodes
-// WITH max(1) AS dummy
-// LOAD CSV WITH HEADERS
-// FROM 'file:///media.csv' AS tag_line
-/////
-
 
 
 
