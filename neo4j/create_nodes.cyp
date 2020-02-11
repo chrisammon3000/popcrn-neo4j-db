@@ -21,8 +21,8 @@ UNWIND followers AS follower
 MERGE (user:User { userHandle: '@'+profile_line.handle })
 WITH user, follower
 MATCH (f:User { userHandle: follower })
-MERGE (f)-[r:FOLLOWS_USER]->(user)
-SET r.followedDate = '<date>';
+MERGE (f)-[r:FOLLOWS]->(user)
+SET r.followedDate = date(), r.followedType = 'USER';
 
 // Create Project nodes
 WITH max(1) AS dummy
@@ -85,7 +85,7 @@ MATCH (user:User)
 WITH user
 MATCH (image:Image)
 WHERE user.userHandle = image.imageOwner
-MERGE (user)-[rel:CREATED_IMAGE]->(image) SET rel.createdDate = date();
+MERGE (user)-[r:CREATED]->(image) SET r.createdDate = date(), r.createdType = 'IMAGE';
 
 // User: FOLLOWS :Tag
 LOAD CSV WITH HEADERS
@@ -96,8 +96,8 @@ UNWIND interests AS interest
 MATCH (user:User { userHandle: user_handle })
 WITH user, interest
 MATCH (tag:Tag { tagName: interest})
-MERGE (user)-[r:FOLLOWS_TAG]->(tag)
-SET r.followedDate = date();
+MERGE (user)-[r:FOLLOWS]->(tag)
+SET r.followedDate = date(), r.followedType = 'TAG';
 
 // User LIKES Image
 // data not available
