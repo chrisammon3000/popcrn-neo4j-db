@@ -100,7 +100,13 @@ MERGE (user)-[r:FOLLOWS]->(tag)
 SET r.followedDate = date(), r.followedType = 'TAG';
 
 // Project IS_TAGGED Tag
-
+LOAD CSV WITH HEADERS
+FROM 'file:///project.csv' AS project_line
+WITH project_line.tags AS project_tags, project_line.projectid AS project_Id
+UNWIND project_tags AS project_tag
+MATCH (project:Project { projectId: project_Id })
+WITH project, project_tag
+MATCH (tag:Tag { tagName: project_tag })
 
 // User LIKES Image
 // data not available
