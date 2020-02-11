@@ -99,6 +99,9 @@ MATCH (tag:Tag { tagName: interest})
 MERGE (user)-[r:FOLLOWS]->(tag)
 SET r.followedDate = date(), r.followedType = 'TAG';
 
+// Project IS_TAGGED Tag
+
+
 // User LIKES Image
 // data not available
 
@@ -114,11 +117,8 @@ SET r.followedDate = date(), r.followedType = 'TAG';
 // Image IS_TAGGED Project
 
 
-// Image IS_TAGGED Project
 
 
-// Project IS_TAGGED Tag
-// data not avaiable
 
 // Constraints
 
