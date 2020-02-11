@@ -78,7 +78,11 @@ CREATE (tag:Tag {
     tagName: tag_node,
 	tagCreatedDate: date(),
     tagCreatedBy: '(userHandle)'
-    } );
+    } )
+
+// Image IS_TAGGED Project
+WITH image_line.projectid AS project_Id, image_line.url AS image_URL
+MERGE 
 
 // User :CREATED Image
 MATCH (user:User) 
@@ -111,6 +115,10 @@ MERGE (project)-[rel:IS_TAGGED]->(tag)
 SET rel.projectTaggedDate = date(), 
 	rel.taggedByUser = '(userHandle)';
 
+
+
+
+
 // User LIKES Image
 // data not available
 
@@ -123,7 +131,7 @@ SET rel.projectTaggedDate = date(),
 // FROM 'file:///media.csv' AS tag_line
 /////
 
-// Image IS_TAGGED Project
+
 
 
 
