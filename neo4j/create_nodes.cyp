@@ -31,7 +31,7 @@ FROM 'file:///project.csv' AS project_line
 CREATE (project:Project { 
     projectId: project_line.projectid,
     projectName: project_line.name,
-	projectCreatedBy: '<userHandle>',
+	projectCreatedBy: 'userHandle',
     projectDescription: project_line.description,
     projectCreatedDate: project_line.date
     } )
@@ -45,8 +45,8 @@ MATCH (user:User { userHandle: collaborator} )
 WITH user, project_Id
 MATCH (project:Project { projectId: project_Id })
 MERGE (user)-[rel:WORKED_ON]->(project)
-SET rel.workedOnDate = '<date>', 
-	rel.userRoles = ['<role 1>', '<role 2>'];
+SET rel.workedOnDate = date(), 
+	rel.userRoles = ['role 1', 'role 2'];
 
 // User FOLLOWS Project, Tag
 // data not available
@@ -63,7 +63,7 @@ FROM 'file:///media.csv' AS image_line
 CREATE (image:Image { 
     imageId: '<imageId>',
     imageOwner: '@'+image_line.owner,
-	imageCreatedDate: '<createdDate>',
+	imageCreatedDate: date(),
     imageCaption: '<caption>',
     imageDescription: '<description>',
     imageURL: image_line.url
@@ -76,7 +76,7 @@ WITH DISTINCT tagname AS tag_node
 CREATE (tag:Tag { 
     tagId: '<tagId>',
     tagName: tag_node,
-	tagCreatedDate: '<createdDate>',
+	tagCreatedDate: date(),
     tagCreatedBy: '<userHandle>'
     } );
 
