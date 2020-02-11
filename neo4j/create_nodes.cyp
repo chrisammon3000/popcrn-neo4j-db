@@ -128,6 +128,15 @@ SET rel.projectTaggedDate = date(),
 WITH max(1) AS dummy
 LOAD CSV WITH HEADERS
 FROM 'file:///media.csv' AS image_line
+WITH image_line.url AS image_URL, split(image_line.tags, ',') AS image_tags
+UNWIND image_tags AS image_tag
+MATCH (image:Image { imageURL: image_URL })
+WITH image, image_tag
+MATCH (tag:Tag { tagName: image_tag })
+MERGE (image)-[rel:IS_TAGGED]->(tag)
+SET rel.imageTaggedDate = date(), 
+	rel.taggedByUser = 'userHandle',
+    rel.tagType = 'IMAGE';
 
 
 
