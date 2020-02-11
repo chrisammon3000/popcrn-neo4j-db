@@ -80,7 +80,7 @@ CREATE (tag:Tag {
     tagCreatedBy: '(userHandle)'
     } )
 
-// Image IS_TAGGED Project
+// Image :FROM Project
 WITH image_line.projectid AS project_Id, image_line.url AS image_URL
 MATCH (image:Image { imageURL: image_URL })
 WITH image
