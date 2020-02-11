@@ -125,6 +125,9 @@ SET rel.projectTaggedDate = date(),
 
 
 //(Image)-[:IS_TAGGED]->(Tag)
+WITH max(1) AS dummy
+LOAD CSV WITH HEADERS
+FROM 'file:///media.csv' AS image_line
 
 
 
