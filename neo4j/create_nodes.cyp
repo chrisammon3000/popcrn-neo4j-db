@@ -31,7 +31,7 @@ FROM 'file:///project.csv' AS project_line
 CREATE (project:Project { 
     projectId: project_line.projectid,
     projectName: project_line.name,
-	projectCreatedBy: 'userHandle',
+	projectCreatedBy: '(userHandle)',
     projectDescription: project_line.description,
     projectCreatedDate: project_line.date
     } )
@@ -61,11 +61,11 @@ FROM 'file:///media.csv' AS image_line
 
 // Image nodes
 CREATE (image:Image { 
-    imageId: '<imageId>',
+    imageId: '(imageId)',
     imageOwner: '@'+image_line.owner,
 	imageCreatedDate: date(),
-    imageCaption: '<caption>',
-    imageDescription: '<description>',
+    imageCaption: '(caption)',
+    imageDescription: '(description)',
     imageURL: image_line.url
     } )
 
@@ -74,10 +74,10 @@ WITH image_line, split(image_line.tags, ',') AS tagnames
 UNWIND tagnames AS tagname
 WITH DISTINCT tagname AS tag_node
 CREATE (tag:Tag { 
-    tagId: '<tagId>',
+    tagId: '(tagId)',
     tagName: tag_node,
 	tagCreatedDate: date(),
-    tagCreatedBy: '<userHandle>'
+    tagCreatedBy: '(userHandle)'
     } );
 
 // User :CREATED Image
