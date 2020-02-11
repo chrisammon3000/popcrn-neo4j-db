@@ -83,7 +83,7 @@ CREATE (tag:Tag {
 // Image :FROM Project
 WITH image_line.projectid AS project_Id, image_line.url AS image_URL
 MATCH (image:Image { imageURL: image_URL })
-WITH image
+WITH image, project_Id
 MATCH (project:Project { projectId: project_Id })
 MERGE (image)-[rel:FROM]->(project)
 SET rel.imageTaggedDate = date(), rel.taggedByUser = '(userHandle)'
