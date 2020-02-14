@@ -139,13 +139,12 @@ SET rel.imageTaggedDate = date(),
     rel.tagType = 'IMAGE'
 
 // (User)-[:IS_TAGGED_IN]->(Image)
-WITH image_line.users AS user_handle, image_line.url AS image_URL
-UNWIND user_handle
+WITH split(image_line.users, ',') AS user_handles, image_line.url AS image_URL
+UNWIND user_handles AS user_handle
 MATCH (user:User { userHandle: user_handle})
 WITH user, image_URL
 MATCH (image:Image { imageURL: image_URL })
-CREATE (user)-[rel:IS_TAGGED_IN]->(image)
-SET rel.userTaggedDate = date(), rel.taggedByUser = '(userHandle)';
+RETURN image.imageURL, user.userHandle
 
 // User IS_TAGGED_IN Image
 
