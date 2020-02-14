@@ -2,7 +2,7 @@
 
 // Create User nodes
 LOAD CSV WITH HEADERS
-FROM 'file:///profile.csv' AS profile_line
+FROM 'https://docs.google.com/spreadsheets/d/1LpluS0A4aPHeftGW3R6tyCRHqc3czRVxzogXrWMI3o0/export?format=csv&id=1LpluS0A4aPHeftGW3R6tyCRHqc3czRVxzogXrWMI3o0&gid=1801331028' AS profile_line
 CREATE (user:User { 
     userId: profile_line.User,
     userHandle: '@' + trim(profile_line.handle),
@@ -29,7 +29,7 @@ SET r.followedDate = date(), r.followedType = 'USER';
 // Create Project nodes
 WITH max(1) AS dummy
 LOAD CSV WITH HEADERS
-FROM 'file:///project.csv' AS project_line
+FROM 'https://docs.google.com/spreadsheets/d/1LpluS0A4aPHeftGW3R6tyCRHqc3czRVxzogXrWMI3o0/export?format=csv&id=1LpluS0A4aPHeftGW3R6tyCRHqc3czRVxzogXrWMI3o0&gid=276470380' AS project_line
 CREATE (project:Project { 
     projectId: project_line.projectid,
     projectName: project_line.name,
@@ -53,7 +53,7 @@ SET rel.workedOnDate = date(),
 // Create Image & Tag nodes
 WITH max(1) AS dummy
 LOAD CSV WITH HEADERS
-FROM 'file:///media.csv' AS image_line
+FROM 'https://docs.google.com/spreadsheets/d/1LpluS0A4aPHeftGW3R6tyCRHqc3czRVxzogXrWMI3o0/export?format=csv&id=1LpluS0A4aPHeftGW3R6tyCRHqc3czRVxzogXrWMI3o0&gid=0' AS image_line
 
 // Image nodes
 CREATE (image:Image { 
@@ -79,7 +79,7 @@ CREATE (tag:Tag {
 // (Image)-[:FROM]->(Project) - there is no project for the value 'Display' in media.csv
 WITH max(1) AS dummy
 LOAD CSV WITH HEADERS
-FROM 'file:///media.csv' AS image_line
+FROM 'https://docs.google.com/spreadsheets/d/1LpluS0A4aPHeftGW3R6tyCRHqc3czRVxzogXrWMI3o0/export?format=csv&id=1LpluS0A4aPHeftGW3R6tyCRHqc3czRVxzogXrWMI3o0&gid=0' AS image_line
 WITH image_line, image_line.projectid AS project_Id, image_line.url AS image_URL
 MATCH (image:Image { imageURL: image_URL })
 WITH image, project_Id
@@ -97,7 +97,7 @@ CREATE (user)-[r:CREATED]->(image) SET r.createdDate = date(), r.createdType = '
 
 // (User)-[:FOLLOWS]->(Tag)
 LOAD CSV WITH HEADERS
-FROM 'file:///profile.csv' AS profile_line
+FROM 'https://docs.google.com/spreadsheets/d/1LpluS0A4aPHeftGW3R6tyCRHqc3czRVxzogXrWMI3o0/export?format=csv&id=1LpluS0A4aPHeftGW3R6tyCRHqc3czRVxzogXrWMI3o0&gid=1801331028' AS profile_line
 WITH '@'+profile_line.handle AS user_handle, 
     split(profile_line.interests_tags, ',') AS interests
 UNWIND interests AS interest
@@ -109,7 +109,7 @@ SET r.followedDate = date(), r.followedType = 'TAG';
 
 // (Project)-[:IS_TAGGED]->(Tag)
 LOAD CSV WITH HEADERS
-FROM 'file:///project.csv' AS project_line
+FROM 'https://docs.google.com/spreadsheets/d/1LpluS0A4aPHeftGW3R6tyCRHqc3czRVxzogXrWMI3o0/export?format=csv&id=1LpluS0A4aPHeftGW3R6tyCRHqc3czRVxzogXrWMI3o0&gid=276470380' AS project_line
 WITH split(project_line.tags, ',') AS project_tags, project_line.projectid AS project_Id
 UNWIND project_tags AS project_tag
 MATCH (project:Project { projectId: project_Id })
@@ -119,11 +119,10 @@ CREATE (project)-[rel:IS_TAGGED]->(tag)
 SET rel.projectTaggedDate = date(), 
 	rel.taggedByUser = '(userHandle)';
 
-
 // (Image)-[:IS_TAGGED]->(Tag)
 WITH max(1) AS dummy
 LOAD CSV WITH HEADERS
-FROM 'file:///media.csv' AS image_line
+FROM 'https://docs.google.com/spreadsheets/d/1LpluS0A4aPHeftGW3R6tyCRHqc3czRVxzogXrWMI3o0/export?format=csv&id=1LpluS0A4aPHeftGW3R6tyCRHqc3czRVxzogXrWMI3o0&gid=0' AS image_line
 WITH image_line.url AS image_URL, split(image_line.tags, ',') AS image_tags
 UNWIND image_tags AS image_tag
 MATCH (image:Image { imageURL: image_URL })
@@ -137,7 +136,7 @@ SET rel.imageTaggedDate = date(),
 // (User)-[:IS_TAGGED_IN]->(Image)
 WITH max(1) AS dummy
 LOAD CSV WITH HEADERS
-FROM 'file:///media.csv' AS image_line
+FROM 'https://docs.google.com/spreadsheets/d/1LpluS0A4aPHeftGW3R6tyCRHqc3czRVxzogXrWMI3o0/export?format=csv&id=1LpluS0A4aPHeftGW3R6tyCRHqc3czRVxzogXrWMI3o0&gid=0' AS image_line
 WITH split(image_line.users, ',') AS user_handles, image_line.url AS image_URL
 UNWIND user_handles AS user_handle
 MATCH (user:User { userHandle: user_handle})
