@@ -21,7 +21,7 @@ UNWIND followers AS follower
 MERGE (user:User { userHandle: '@'+profile_line.handle })
 WITH user, follower
 MATCH (f:User { userHandle: follower })
-MERGE (f)-[r:FOLLOWS]->(user)
+CREATE (f)-[r:FOLLOWS]->(user)
 SET r.followedDate = date(), r.followedType = 'USER';
 
 // Create Project nodes
@@ -44,7 +44,7 @@ UNWIND collaborators AS collaborator
 MATCH (user:User { userHandle: collaborator} )
 WITH user, project_Id
 MATCH (project:Project { projectId: project_Id })
-MERGE (user)-[rel:WORKED_ON]->(project)
+CREATE (user)-[rel:WORKED_ON]->(project)
 SET rel.workedOnDate = date(), 
 	rel.userRoles = ['role 1', 'role 2'];
 
@@ -88,7 +88,7 @@ WITH image_line, image_line.projectid AS project_Id, image_line.url AS image_URL
 MATCH (image:Image { imageURL: image_URL })
 WITH image, project_Id
 MATCH (project:Project { projectId: project_Id })
-MERGE (image)-[rel:FROM]->(project)
+CREATE (image)-[rel:FROM]->(project)
 SET rel.imageTaggedDate = date(), rel.taggedByUser = '(userHandle)'
 
 // User :CREATED Image
@@ -97,7 +97,7 @@ MATCH (user:User)
 WITH user
 MATCH (image:Image)
 WHERE user.userHandle = image.imageOwner
-MERGE (user)-[r:CREATED]->(image) SET r.createdDate = date(), r.createdType = 'IMAGE';
+CREATE (user)-[r:CREATED]->(image) SET r.createdDate = date(), r.createdType = 'IMAGE';
 
 // User: FOLLOWS :Tag
 LOAD CSV WITH HEADERS
@@ -108,7 +108,7 @@ UNWIND interests AS interest
 MATCH (user:User { userHandle: user_handle })
 WITH user, interest
 MATCH (tag:Tag { tagName: interest})
-MERGE (user)-[r:FOLLOWS]->(tag)
+CREATE (user)-[r:FOLLOWS]->(tag)
 SET r.followedDate = date(), r.followedType = 'TAG';
 
 // Project IS_TAGGED Tag
@@ -119,7 +119,7 @@ UNWIND project_tags AS project_tag
 MATCH (project:Project { projectId: project_Id })
 WITH project, project_tag
 MATCH (tag:Tag { tagName: project_tag })
-MERGE (project)-[rel:IS_TAGGED]->(tag) 
+CREATE (project)-[rel:IS_TAGGED]->(tag) 
 SET rel.projectTaggedDate = date(), 
 	rel.taggedByUser = '(userHandle)';
 
@@ -133,7 +133,7 @@ UNWIND image_tags AS image_tag
 MATCH (image:Image { imageURL: image_URL })
 WITH image, image_tag
 MATCH (tag:Tag { tagName: image_tag })
-MERGE (image)-[rel:IS_TAGGED]->(tag)
+CREATE (image)-[rel:IS_TAGGED]->(tag)
 SET rel.imageTaggedDate = date(), 
 	rel.taggedByUser = 'userHandle',
     rel.tagType = 'IMAGE';
