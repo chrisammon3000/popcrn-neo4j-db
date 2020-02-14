@@ -1,4 +1,6 @@
 // Full Query
+
+// Create User nodes
 LOAD CSV WITH HEADERS
 FROM 'file:///profile.csv' AS profile_line
 CREATE (user:User { 
