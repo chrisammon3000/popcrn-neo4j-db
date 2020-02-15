@@ -22,6 +22,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-CMD [ "python", "./import_data.py" ]
-
 VOLUME /data
+
+CMD [ "python", "./import_data.py" ]
