@@ -16,3 +16,6 @@ RUN wget -O profile.csv https://docs.google.com/spreadsheets/d/1LpluS0A4aPHeftGW
     && echo "Downloading from Google Sheets: media.csv" \
     && cp *.csv data/ \
     && rm *.csv
+
+
+
