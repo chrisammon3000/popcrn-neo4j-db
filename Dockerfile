@@ -7,9 +7,7 @@ FROM neo4j:3.5.14
 #LABEL Maintainer="gclindsey@gmail.com"
 
 RUN apt-get update \
-    && apt-get install -y wget apt-utils \
-    && mkdir -p certificates/revoked \
-    && mkdir -p certificates/trusted
+    && apt-get install -y wget apt-utils
 
 # Retrieve algorithms & APOCs
 # RUN wget "${NEO4J_CONTRIB}/neo4j-graph-algorithms/releases/download/3.5.4.0/graph-algorithms-algo-3.5.4.0.jar" -P plugins/ \
