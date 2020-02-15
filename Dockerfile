@@ -4,10 +4,10 @@
 # Run cypher-shell script that loads the data
 
 FROM neo4j:3.5.14
-LABEL Maintainer="thoba@sanbi.ac.za"
+#LABEL Maintainer="gclindsey@gmail.com"
 
 RUN apt-get update \
-    && apt-get install -y wget openssl apt-utils zip unzip \
+    && apt-get install -y wget apt-utils \
     && mkdir -p certificates/revoked \
     && mkdir -p certificates/trusted
 
@@ -18,5 +18,6 @@ RUN apt-get update \
 # COPY dc/plugins/* plugins/
 # COPY dc/*.html /
 
-ENV NEO4J_AUTH=none \
-    NEO4J_ACCEPT_LICENSE_AGREEMENT=yes
+ENV NEO4J_AUTH=none
+
+RUN echo "Neo4j is ready."

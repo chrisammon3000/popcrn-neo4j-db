@@ -3,8 +3,8 @@ version: "3"
 services:
   db:
     restart: always
-    build: db/
-      context: db/
+    build:
+      context: .
       dockerfile: Dockerfile
     environment:
       NEO4J_AUTH: none
@@ -25,4 +25,5 @@ services:
       - "7474:7474"
   dc:
     build: dc/
+    links: db
     network_mode: "bridge"
