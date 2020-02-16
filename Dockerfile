@@ -4,12 +4,13 @@
 # Run cypher-shell script that loads the data
 
 # To run:
-# docker run -it --publish=7474:7474 --publish=7687:7687 --env NEO4J_AUTH=neo4j/test neo4j
+# docker run -it --publish=7474:7474 --publish=7687:7687 -d --env NEO4J_AUTH=neo4j/test <image tag>
 
 FROM neo4j:3.5.14
 #LABEL Maintainer="gclindsey@gmail.com"
 
-ENV NEO4J_AUTH=none
+ENV NEO4J_AUTH="neo4j/test"
+# ENV NEO4J_SECRETS_PASSWORD = "test"
 
 RUN apt-get update \
     && apt-get install -y \ 
@@ -31,10 +32,6 @@ COPY ./docker-neo4j-entrypoint.sh /var/lib/neo4j
 
 RUN ["chmod", "+x", "/var/lib/neo4j/docker-neo4j-entrypoint.sh"]
 
-# Run cypher-shell to execute query from file
-# Trying to figure out username and password authentication
-# RUN cat import/create_db.cyp | bin/cypher-shell
-
 # VOLUME /data
 
 # # Download Google Sheets data as .csv
@@ -52,3 +49,7 @@ RUN echo "Neo4j is ready."
 
 ENTRYPOINT ["./docker-neo4j-entrypoint.sh"]
 CMD ["neo4j"]
+
+#  && cat import/create_db.cyp | bin/cypher-shell -u neo4j -p test
+
+# Run cypher-shell to execute query from file 
