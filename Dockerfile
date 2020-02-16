@@ -6,16 +6,22 @@
 FROM neo4j:3.5.14
 #LABEL Maintainer="gclindsey@gmail.com"
 
-RUN apt-get update \
-    && apt-get install -y wget apt-utils
-
-# Retrieve algorithms & APOCs
-# RUN wget "${NEO4J_CONTRIB}/neo4j-graph-algorithms/releases/download/3.5.4.0/graph-algorithms-algo-3.5.4.0.jar" -P plugins/ \
-#     && wget "${NEO4J_CONTRIB}/neo4j-apoc-procedures/releases/download/3.5.0.4/apoc-3.5.0.4-all.jar" -P plugins/ 
-
-# COPY dc/plugins/* plugins/
-# COPY dc/*.html /
-
 ENV NEO4J_AUTH=none
+
+RUN apt-get update \
+    && apt-get install -y \ 
+    wget \ 
+    apt-utils \
+    && mkdir -p /import
+
+RUN cd import \ 
+    && wget -O profile.csv https://docs.google.com/spreadsheets/d/1LpluS0A4aPHeftGW3R6tyCRHqc3czRVxzogXrWMI3o0/export?format=csv&id=1LpluS0A4aPHeftGW3R6tyCRHqc3czRVxzogXrWMI3o0&gid=1801331028 \
+    && echo "Downloading from Google Sheets: profile.csv ..." \
+    && wget -O project.csv https://docs.google.com/spreadsheets/d/1LpluS0A4aPHeftGW3R6tyCRHqc3czRVxzogXrWMI3o0/export?format=csv&id=1LpluS0A4aPHeftGW3R6tyCRHqc3czRVxzogXrWMI3o0&gid=276470380 \
+    && echo "Downloading from Google Sheets: project.csv ..." \
+    && wget -O media.csv https://docs.google.com/spreadsheets/d/1LpluS0A4aPHeftGW3R6tyCRHqc3czRVxzogXrWMI3o0/export?format=csv&id=1LpluS0A4aPHeftGW3R6tyCRHqc3czRVxzogXrWMI3o0&gid=0 \
+    && echo "Downloading from Google Sheets: media.csv ..."
+
+VOLUME /import
 
 RUN echo "Neo4j is ready."
