@@ -3,6 +3,9 @@
 # Run script that pipes in command to create a create_db.cyp file in ./neo4j:/var/lib/neo4j/import
 # Run cypher-shell script that loads the data
 
+# To run:
+# docker run -it --publish=7474:7474 --publish=7687:7687 --env NEO4J_AUTH=neo4j/test neo4j
+
 FROM neo4j:3.5.14
 #LABEL Maintainer="gclindsey@gmail.com"
 
