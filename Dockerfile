@@ -24,6 +24,9 @@ RUN echo 'apoc.import.file.enabled=true' >> conf/neo4j.conf \
     && echo 'dbms.logs.query.enabled=true' >> conf/neo4j.conf
 
 COPY ./neo4j/create_db.cyp /var/lib/neo4j/import/
+COPY ./docker-neo4j-entrypoint.sh /var/lib/neo4j
+
+RUN ["chmod", "+x", "/var/lib/neo4j/docker-neo4j-entrypoint.sh"]
 
 # Run cypher-shell to execute query from file
 # Trying to figure out username and password authentication
@@ -44,5 +47,5 @@ COPY ./neo4j/create_db.cyp /var/lib/neo4j/import/
 
 RUN echo "Neo4j is ready."
 
-# ENTRYPOINT ["/scripts/docker-neo4j-entrypoint.sh"]
-# CMD ["neo4j"]
+ENTRYPOINT ["./docker-neo4j-entrypoint.sh"]
+CMD ["neo4j"]
