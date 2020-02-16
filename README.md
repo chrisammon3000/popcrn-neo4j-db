@@ -1,43 +1,27 @@
 # popcrn-gql
 Graph database layer using Neo4j for the POPCRN app, accessed through a GraphQL API.
 
-#### -- Project Status: [Active]
-
 ## Project Description
 Describes nodes, relationships, and the properties of each. Nodes include Users, Projects, Images and Tags. The database can be run inside a Docker container and accessed via http://localhost:7474.
 
-## Getting Started
+## Starting the database
 
-1. Clone this repo (for help see this [tutorial](https://help.github.com/articles/cloning-a-repository/)).
-2. Raw Data is being kept [here](Repo folder containing raw data) within this repo.
+1. Clone this repo.
 
-    *If using offline data mention that and how they may obtain the data from the froup)*
+2. Open terminal and navigate to the project directory, then run:
+<br>```$ docker build -t popcrn-gql .```
 
-3. Data processing/transformation scripts are being kept [here](Repo folder containing data processing scripts/notebooks)
-4. etc...
+3. Next, start the container by running:
+<br>```$ docker run -it --publish=7474:7474 --publish=7687:7687 -d neo4j-popcrn```
 
-*If your project is well underway and setup is fairly complicated (ie. requires installation of many packages) create another "setup.md" file and link to it here*  
+4. Run `$ docker ps` and copy the CONTAINER ID
 
-5. Follow setup [instructions](Link to file)
+5. Insert the CONTAINER ID and access the container's terminal by running:
+<br>```$ docker exec -it <CONTAINER ID> bash```
 
-## Featured Notebooks/Analysis/Deliverables
-* [Notebook/Markdown/Slide Deck Title](link)
-* [Notebook/Markdown/Slide DeckTitle](link)
-* [Blog Post](link)
+6. Once you are inside the container, use cypher-shell to load data from Google Sheets:
+<br>```$cat import/create_db.cyp | bin/cypher-shell -u neo4j -p test```
+
+1. Open the Neo4j browser at `http://localhost:7474` to view the graph.
 
 
-## Contributing DSWG Members
-
-**Team Leads (Contacts) : [Full Name](https://github.com/[github handle])(@slackHandle)**
-
-#### Other Members:
-
-|Name     |  Slack Handle   |
-|---------|-----------------|
-|[Full Name](https://github.com/[github handle])| @johnDoe        |
-|[Full Name](https://github.com/[github handle]) |     @janeDoe    |
-
-## Contact
-* If you haven't joined the SF Brigade Slack, [you can do that here](http://c4sf.me/slack).  
-* Our slack channel is `#datasci-projectname`
-* Feel free to contact team leads with any questions or if you are interested in contributing!
