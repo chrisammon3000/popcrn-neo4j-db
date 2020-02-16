@@ -13,10 +13,21 @@ RUN apt-get update \
     wget \ 
     apt-utils
 
+# APOC, Algorithms and Guide settings 
+# RUN echo 'dbms.security.procedures.whitelist=apoc.*, algo.*' >> conf/neo4j.conf \
+#     && echo 'dbms.security.procedures.unrestricted=apoc.*, algo.*' >> conf/neo4j.conf \
+#     && echo 'dbms.unmanaged_extension_classes=extension.web=/guides' >> conf/neo4j.conf \
+#     ## The extension assumes that you added a 'guides' directory in the "data".
+#     && echo 'org.neo4j.server.guide.directory=data/guides' >> conf/neo4j.conf \ 
+#     && echo 'browser.remote_content_hostname_whitelist=*' >> conf/neo4j.conf \
+RUN echo 'apoc.import.file.enabled=true' >> conf/neo4j.conf \
+    && echo 'dbms.logs.query.enabled=true' >> conf/neo4j.conf
+
 COPY ./neo4j/create_db.cyp /var/lib/neo4j/import/
 
-
-# CALL apoc.cypher.runFile(file or url,{config}) yield row, result
+# Run cypher-shell to execute query from file
+# Trying to figure out username and password authentication
+# RUN cat import/create_db.cyp | bin/cypher-shell
 
 # VOLUME /data
 
@@ -32,3 +43,6 @@ COPY ./neo4j/create_db.cyp /var/lib/neo4j/import/
 # VOLUME /import
 
 RUN echo "Neo4j is ready."
+
+# ENTRYPOINT ["/scripts/docker-neo4j-entrypoint.sh"]
+# CMD ["neo4j"]
